@@ -1,0 +1,62 @@
+﻿@model AppointmentScheduling.Models.ViewModel.RegisterViewModel;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers;
+
+
+<h2> Sing Up</h2>
+<form method="post" asp-action="Register" asp-controller="Account">
+    <h4 Create New Account.> </h4>
+    <hr />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label class="col-md-2" asp-for="Name"></label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2" asp-for="Email"></label>
+        <div class="col-md-10">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2" asp-for="Password"></label>
+        <div class="col-md-10">
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2" asp-for="Confrimpassword"></label>
+        <div class="col-md-10">
+            <input asp-for="Confrimpassword" class="form-control" />
+            <span asp-validation-for="Confrimpassword" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2" asp-for="RoleName"></label>
+        <div class="col-md-10">
+            <select asp-for="RoleName" asp-items="@AppointmentScheduling.Helper.Helper.GetRoleForDropDown()" class="form-control">
+                <option selected>---Select User Role---</option>
+            </select>
+
+            <span asp-validation-for="RoleName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-10 offset-md-2">
+            <input Value="Register" name="Register" type="submit" class="btn btn-success" />
+        </div>
+    </div>
+    <p class="col-md-10 offset-md-2">
+        <a asp-action="Login"> Sing In</a>
+    </p>
+</form>
+
+@section Scripts{
+<partial name="_ValidationScriptsPartial" />
+}
