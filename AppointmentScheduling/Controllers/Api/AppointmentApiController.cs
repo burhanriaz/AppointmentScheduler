@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace AppointmentScheduling.Controllers.Api
 {
@@ -74,6 +75,73 @@ namespace AppointmentScheduling.Controllers.Api
                     commanResponse.dataenum = _appointmentServices.DoctorEventById(doctorId);
                     commanResponse.status = Helper.Helper.success_code;
                 }
+            }
+            catch (Exception e)
+            {
+                commanResponse.message = e.Message;
+                commanResponse.status = Helper.Helper.failure_code;
+            }
+            return Ok(commanResponse);
+        }
+
+        [HttpGet]
+        [Route("GetCalendarDataById/{id}")]
+        public IActionResult GetCalendarDataById(int id)
+        {
+            CommanResponse<AppointmentVM> commanResponse = new CommanResponse<AppointmentVM>();
+            try
+            {
+
+                commanResponse.dataenum = _appointmentServices.GetAppointmentById(id);
+                commanResponse.status = Helper.Helper.success_code;
+
+            }
+            catch (Exception e)
+            {
+                commanResponse.message = e.Message;
+                commanResponse.status = Helper.Helper.failure_code;
+            }
+            return Ok(commanResponse);
+        }
+        [HttpGet]
+        [Route("ConfirmEvent/{id}")]
+        public IActionResult ConfirmEvent(int id)
+        {
+            CommanResponse<int> commanResponse = new CommanResponse<int>();
+            try
+            {
+
+                var result = _appointmentServices.ConfirmEvent(id).Result;
+                if(result > 0)
+                {
+                    commanResponse.status = Helper.Helper.success_code;
+                    commanResponse.message = Helper.Helper.meetingConfirm;
+                }
+                else
+                {
+                    commanResponse.status = Helper.Helper.failure_code;
+                    commanResponse.message = Helper.Helper.meetingConfirmError;
+
+                }
+            }
+            catch (Exception e)
+            {
+                commanResponse.message = e.Message;
+                commanResponse.status = Helper.Helper.failure_code;
+            }
+            return Ok(commanResponse);
+        }
+        [HttpGet]
+        [Route("DeleteAppoinment/{id}")]
+        public async Task<IActionResult> DeleteAppoinment(int id)
+        {
+            CommanResponse<int> commanResponse = new CommanResponse<int>();
+            try
+            {
+
+                commanResponse.status = await _appointmentServices.DeleteAppoinment(id);
+                commanResponse.message = commanResponse.status == 1 ? Helper.Helper.appointmentDeleted : Helper.Helper.somethingWentWrong;
+
             }
             catch (Exception e)
             {

@@ -2,9 +2,20 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers;
 
 
-<h2> Sing Up</h2>
+
+
 <form method="post" asp-action="Register" asp-controller="Account">
+    @if(User.IsInRole(AppointmentScheduling.Helper.Helper.Admin))
+    {
+    <h4 Regisgter an Admin Account.> </h4>
+        
+    }
+    else
+    {
     <h4 Create New Account.> </h4>
+
+
+    }
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -40,12 +51,12 @@
     <div class="form-group">
         <label class="col-md-2" asp-for="RoleName"></label>
         <div class="col-md-10">
-            <select asp-for="RoleName" asp-items="@AppointmentScheduling.Helper.Helper.GetRoleForDropDown()" class="form-control">
-                <option selected>---Select User Role---</option>
+            <select asp-for="RoleName" asp-items="@AppointmentScheduling.Helper.Helper.GetRoleForDropDown(User.IsInRole(AppointmentScheduling.Helper.Helper.Admin))" class="form-control">
+                @*<option selected>---Select User Role---</option>*@
             </select>
-
             <span asp-validation-for="RoleName" class="text-danger"></span>
         </div>
+   
     </div>
     <div class="form-group">
         <div class="col-10 offset-md-2">

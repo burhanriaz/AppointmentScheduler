@@ -5,7 +5,7 @@ namespace AppointmentScheduling.Helper
 {
     public class Helper
     {
-        public static string Admin ="Admin" ;
+        public const string Admin = "Admin";
         public static string Doctor = "Doctor";
         public static string Patient = "Patient";
         public static string appointmentAdded = "Appointment added successfully.";
@@ -21,18 +21,28 @@ namespace AppointmentScheduling.Helper
         public static int success_code = 1;
         public static int failure_code = 0;
 
-        public static List<SelectListItem> GetRoleForDropDown()
+        public static List<SelectListItem> GetRoleForDropDown(bool isAdmin)
         {
-
-            return new List<SelectListItem>()
+            if (isAdmin)
             {
-                new SelectListItem{Value=Helper.Admin,Text=Helper.Admin },
-                new SelectListItem{Value=Helper.Doctor,Text=Helper.Doctor },
 
+                return new List<SelectListItem>()
+            {
+                new SelectListItem{Value=Helper.Admin,Text=Helper.Admin }
+
+            };
+            }
+            else
+            {
+                return new List<SelectListItem>()
+            {
+                new SelectListItem{Value=Helper.Doctor,Text=Helper.Doctor },
                 new SelectListItem{Value=Helper.Patient,Text=Helper.Patient }
 
             };
+            }
         }
+
 
         public static List<SelectListItem> GetTimeDropDown()
         {

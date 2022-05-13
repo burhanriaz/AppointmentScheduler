@@ -97,7 +97,7 @@ namespace AppointmentScheduling.Migrations
                     b.Property<string>("AdminId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discription")
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DoctorId")

@@ -1,3 +1,5 @@
+using AppointmentScheduling.DbInitializer;
+using AppointmentScheduling.Helper;
 using AppointmentScheduling.Models;
 using AppointmentScheduling.Models.AppDbContext;
 using AppointmentScheduling.Services;
@@ -5,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,10 +37,20 @@ namespace AppointmentScheduling
             services.AddDbContext<AppDbContext>
                 (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddHttpContextAccessor();
+            services.AddDistributedMemoryCache();
+            services.AddScoped<IEmailSender , EmailSender> ();
+            services.AddScoped<IDbInitializer, DbInitializer.DbInitializer>();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(101);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IDbInitializer IdbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -55,7 +68,8 @@ namespace AppointmentScheduling
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
+            IdbInitializer.Initialize();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -1,6 +1,7 @@
 ﻿using AppointmentScheduling.Models;
 using AppointmentScheduling.Models.AppDbContext;
 using AppointmentScheduling.Models.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -34,9 +35,12 @@ namespace AppointmentScheduling.Controllers
             if (ModelState.IsValid)
             {
 
-                var user = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe, false);
-                if (user.Succeeded)
+                var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe, false);
+                if (result.Succeeded)
                 {
+                    var user = await _userManager.FindByNameAsync(loginViewModel.Email);
+                    HttpContext.Session.SetString("ssuserName", user.Name);
+                   // var username = HttpContext.Session.GetString("ssuserName");
                     return RedirectToAction("Index", "Appointment");
                 }
                 else
@@ -72,8 +76,17 @@ namespace AppointmentScheduling.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(newuser, registerViewModel.RoleName);
-                    await _signInManager.SignInAsync(newuser, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+
+                    if (!User.IsInRole(Helper.Helper.Admin))
+                    {
+                        await _signInManager.SignInAsync(newuser, isPersistent: false);
+
+                    }
+                    else
+                    {
+                        TempData["newAdminSignUp"] = newuser.Name;
+                    }
+                    return RedirectToAction("Index", "Appointment");
                 }
                 foreach (var error in result.Errors)
                 {
