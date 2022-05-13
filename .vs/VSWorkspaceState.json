@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\AppointmentScheduling",
-    "\\AppointmentScheduling\\Helper"
+    "\\AppointmentScheduling"
   ],
-  "SelectedNode": "\\AppointmentScheduling.sln",
   "PreviewInSolutionExplorer": false
 }
